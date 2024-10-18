@@ -32,5 +32,5 @@ class Song{
         coverUrl: "assets/images/fox3.png"
     ),
   ];
-  
+
 }

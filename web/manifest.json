@@ -1,6 +1,6 @@
 {
-    "name": "cplayer",
-    "short_name": "cplayer",
+    "name": "player",
+    "short_name": "player",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

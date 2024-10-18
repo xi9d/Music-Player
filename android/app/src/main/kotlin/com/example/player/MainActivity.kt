@@ -1,4 +1,4 @@
-package com.example.cplayer
+package com.example.player
 
 import io.flutter.embedding.android.FlutterActivity
 

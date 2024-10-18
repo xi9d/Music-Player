@@ -1,4 +1,4 @@
-name: cplayer
+name: player
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -39,11 +40,11 @@ dependencies:
   just_audio: ^0.9.41
   get: ^4.6.6
 
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  permission_handler: ^10.2.0
-  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -51,6 +52,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  permission_handler: ^10.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,17 +67,6 @@ flutter:
   assets:
   - assets/images/
   - assets/music/
-#   - assets/images/fox1.png
-#   - assets/images/fox2.png
-#   - assets/images/fox3.png
-#   - assets/music/music1.mp3
-#   - assets/music/music2.mp3
-#   - assets/music/music3.mp3
-
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
