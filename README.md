@@ -30,8 +30,8 @@ Ensure you have the following installed before running the project:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/flutter-music-player.git
-   cd flutter-music-player
+   git clone https://github.com/xi9d/Music-Player.git
+   cd Music-Player
 
 ![img.png](img.png)
 ![img_1.png](img_1.png)
