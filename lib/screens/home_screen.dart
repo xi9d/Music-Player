@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _initializeFirstSong() {
-    // Load the first song on initialization
     if (Song.songs.isNotEmpty) {
       _playSong(Song.songs[0], 0);
     }
@@ -38,9 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _playSong(Song song, int index) async {
     try {
-      await _audioPlayer.setAsset(song.url); // Load the song from assets
+      _audioPlayer.setAsset(song.url); // Load the song from assets
       _audioPlayer.play();
-      setState(() {
+       setState(() {
         currentlyPlaying = song;
         currentIndex = index;
         isPlaying = true;
@@ -106,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
               margin: const EdgeInsets.only(right: 20),
               child: const CircleAvatar(
                 backgroundImage: NetworkImage(
-                    "https://avatars.githubusercontent.com/u/137267747?v=4"),
+                    "https://images.unsplash.com/photo-1729008014121-edd6672688d7?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw0fHx8ZW58MHx8fHx8"),
                 radius: 15.0,
               ),
             ),
@@ -284,83 +283,262 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Favorites screen
   Widget _buildFavoritesScreen(BuildContext context) {
-    return Center(
+    // Dummy data for favorite songs (replace with actual data)
+    final List<Map<String, String>> favoriteSongs = [
+      {
+        'title': 'Song 1',
+        'artist': 'Artist 1',
+        'coverUrl': 'assets/images/fox2.png', // Example image paths
+      },
+      {
+        'title': 'Song 2',
+        'artist': 'Artist 2',
+        'coverUrl': 'assets/images/fox3.png',
+      },
+      // Add more songs here...
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title Section
           const Text(
-            'Favorites Page',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            'Your Favorite Songs',
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-              // You can add functionality here
-            },
-            child: const Text('Add Favorite Songs'),
+          const SizedBox(height: 20),
+
+          // Conditional Rendering: If no favorite songs
+          favoriteSongs.isEmpty
+              ? Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/fox1.png', // Placeholder for empty state
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "You haven't added any favorite songs yet!",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                const Text(
+                  'still in development',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to add songs
+                  },
+                  child: const Text('Add Favorite Songs'),
+                ),
+
+              ],
+            ),
+          )
+              : Expanded(
+            child: ListView.builder(
+              itemCount: favoriteSongs.length,
+              itemBuilder: (context, index) {
+                final song = favoriteSongs[index];
+                return _buildFavoriteSongItem(song);
+              },
+            ),
+          ),
+
+          // Add Favorite Songs Button
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Center(
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 12), // Better button size
+                  backgroundColor: Colors.blueAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                icon: const Icon(Icons.add, color: Colors.white),
+                label: const Text('Add Favorite Songs'),
+                onPressed: () {
+                  // Navigate to add more songs
+                },
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  // Play screen to show current song or first song on the list
+// Helper widget for displaying each favorite song in a card format
+  Widget _buildFavoriteSongItem(Map<String, String> song) {
+    return Card(
+      color: Colors.grey[850],
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(10),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: Image.asset(
+            song['coverUrl']!,
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+          ),
+        ),
+        title: Text(
+          song['title']!,
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          song['artist']!,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.white70,
+          ),
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.favorite, color: Colors.redAccent),
+          onPressed: () {
+            // Functionality to remove from favorites
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _buildPlayScreen(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     if (currentlyPlaying == null) {
       return const Center(
         child: Text(
           'No song is playing',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white54, // Softer color for no song state
+          ),
         ),
       );
     }
 
-    return Center(
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        Text(
-        'Now Playing: ${currentlyPlaying!.title}',
-        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-    ),
-    const SizedBox(height: 10),
-    Image.asset(            currentlyPlaying!.coverUrl,
-      width: 200,
-      height: 200,
-      fit: BoxFit.cover,
-    ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: _previousSong,
-                icon: const Icon(Icons.skip_previous),
-                color: Colors.white,
-                iconSize: 40,
-              ),
-              IconButton(
-                onPressed: isPlaying ? _pauseSong : _resumeSong,
-                icon: Icon(
-                  isPlaying
-                      ? Icons.pause_circle_filled
-                      : Icons.play_circle_filled,
+    return Column(
+      children: [
+        // This section will take half of the screen height for the image
+        Expanded(
+          flex: 5,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Container(
+                width: screenWidth * 0.8, // Image takes 80% of the screen width
+                height: screenHeight * 0.4, // Image takes 40% of screen height
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24), // More pronounced rounding for modern look
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black38, // Slightly darker shadow for better contrast
+                      blurRadius: 15,
+                      offset: Offset(0, 8),
+                    ),
+                  ],
                 ),
-                color: Colors.white,
-                iconSize: 60,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: currentlyPlaying!.coverUrl.isNotEmpty
+                      ? Image.asset(
+                    currentlyPlaying!.coverUrl,
+                    fit: BoxFit.cover,
+                  )
+                      : Image.asset(
+                    'assets/images/fox1.png', // Fallback image for missing cover
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              IconButton(
-                onPressed: _nextSong,
-                icon: const Icon(Icons.skip_next),
-                color: Colors.white,
-                iconSize: 40,
-              ),
-            ],
+            ),
+          ),
+        ),
+
+        // Song Title Section
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Text(
+            'Now Playing: ${currentlyPlaying!.title}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 24, // Make the title more prominent
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+
+        // Controls Section
+        Expanded(
+          flex: 2,
+          child: _buildControlButtons(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildControlButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            onPressed: _previousSong,
+            icon: const Icon(Icons.skip_previous),
+            color: Colors.white,
+            iconSize: 48, // Slightly larger for better visibility
+          ),
+          IconButton(
+            onPressed: isPlaying ? _pauseSong : _resumeSong,
+            icon: Icon(
+              isPlaying
+                  ? Icons.pause_circle_filled
+                  : Icons.play_circle_filled,
+            ),
+            color: Colors.white,
+            iconSize: 64, // Larger play/pause button for prominence
+          ),
+          IconButton(
+            onPressed: _nextSong,
+            icon: const Icon(Icons.skip_next),
+            color: Colors.white,
+            iconSize: 48, // Larger next button
           ),
         ],
-        ),
+      ),
     );
   }
 
@@ -377,12 +555,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const CircleAvatar(
                   backgroundImage: NetworkImage(
-                      'https://avatars.githubusercontent.com/u/137267747?v=4'),
+                      'https://images.unsplash.com/photo-1729008014121-edd6672688d7?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw0fHx8ZW58MHx8fHx8'),
                   radius: 50,
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  'Paul Webo',
+                  'John Doe',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -390,7 +568,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Music Lover | Developer | Song Curator',
+                  'Music Player',
                   style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
@@ -417,9 +595,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildProfileStat('Songs Played', '102'),
-              _buildProfileStat('Playlists', '8'),
-              _buildProfileStat('Favorites', '24'),
+              _buildProfileStat('Songs Played', 'N/A'),
+              _buildProfileStat('Playlists', 'N/A'),
+              _buildProfileStat('Favorites', 'N/A'),
             ],
           ),
           const SizedBox(height: 20),
