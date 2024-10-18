@@ -241,6 +241,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
+            StreamBuilder<Duration>(
+              stream: _audioPlayer.positionStream,
+              builder: (context, snapshot) {
+                final position = snapshot.data ?? Duration.zero;
+                final totalDuration = _audioPlayer.duration ?? Duration.zero;
+
+                return Column(
+                  children: [
+                    Slider(
+                      min: 0.0,
+                      max: totalDuration.inSeconds.toDouble(),
+                      value: position.inSeconds.toDouble(),
+                      onChanged: (value) {
+                        final newPosition = Duration(seconds: value.toInt());
+                        _audioPlayer.seek(newPosition);
+                      },
+                    ),
+                    Text('${position.toString().split('.').first} / ${totalDuration.toString().split('.').first}'),
+                  ],
+                );
+              },
+            ),
             const SizedBox(height: 20),
             if (currentlyPlaying != null)
               Column(
@@ -499,7 +521,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+        StreamBuilder<Duration>(
+          stream: _audioPlayer.positionStream,
+          builder: (context, snapshot) {
+            final position = snapshot.data ?? Duration.zero;
+            final totalDuration = _audioPlayer.duration ?? Duration.zero;
 
+            return Column(
+              children: [
+                Slider(
+                  min: 0.0,
+                  max: totalDuration.inSeconds.toDouble(),
+                  value: position.inSeconds.toDouble(),
+                  onChanged: (value) {
+                    final newPosition = Duration(seconds: value.toInt());
+                    _audioPlayer.seek(newPosition);
+                  },
+                ),
+                Text('${position.toString().split('.').first} / ${totalDuration.toString().split('.').first}'),
+              ],
+            );
+          },
+        ),
         // Controls Section
         Expanded(
           flex: 2,
@@ -515,6 +558,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+
           IconButton(
             onPressed: _previousSong,
             icon: const Icon(Icons.skip_previous),
